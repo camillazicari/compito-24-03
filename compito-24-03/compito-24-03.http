@@ -1,0 +1,6 @@
+@compito_24_03_HostAddress = http://localhost:5112
+
+GET {{compito_24_03_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
