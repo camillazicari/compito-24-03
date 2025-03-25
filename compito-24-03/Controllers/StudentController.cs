@@ -23,10 +23,10 @@ namespace compito_24_03.Controllers
 
             if (!studente)
             {
-                return BadRequest( new
-                    {
+                return BadRequest(new
+                {
                     message = "Errore nella creazione dello studente"
-                    }); 
+                });
             }
             return Ok(new
             {
@@ -39,7 +39,7 @@ namespace compito_24_03.Controllers
         {
             var studentList = await _studentService.GetStudents();
 
-            if(studentList == null)
+            if (studentList == null)
             {
                 return BadRequest(new
                 {
@@ -47,7 +47,7 @@ namespace compito_24_03.Controllers
                 });
             }
 
-            if(!studentList.Any())
+            if (!studentList.Any())
             {
                 return NoContent();
             }
@@ -62,5 +62,62 @@ namespace compito_24_03.Controllers
                 data = studentList
             });
         }
+
+        [HttpGet("/student/{email}")]
+        public async Task<IActionResult> UpdateStudent([FromQuery] string email)
+        {
+            var result = await _studentService.GetStudentByEmail(email);
+
+            if (result == null)
+            {
+                return BadRequest(new
+                {
+                    message = "Studente non trovato"
+                });
+            }
+
+            return Ok(new
+            {
+                message = "Studente trovato",
+                data = result
+            });
+        }
+
+        [HttpDelete("/student/{email}")]
+        public async Task<IActionResult> DeleteStudent([FromQuery] string email)
+        {
+            var result = await _studentService.DeleteStudent(email);
+
+            if (!result)
+            {
+                return BadRequest(new
+                {
+                    message = "Errore nella cancellazione dello studente"
+                });
+            }
+
+            return Ok(new
+            {
+                message = "Studente cancellato con successo"
+            });
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateStudent([FromQuery] string email, [FromBody] Student student)
+        {
+            var result = await _studentService.UpdateStudent(email, student);
+            if (!result)
+            {
+                return BadRequest(new
+                {
+                    message = "Errore nell'aggiornamento dello studente"
+                });
+            }
+            return Ok(new
+            {
+                message = "Studente aggiornato con successo"
+            });
+        }
+
     }
 }
